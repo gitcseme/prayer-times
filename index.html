@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vivasoft Prayer Time</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: radial-gradient(circle at top, #0a192f, #000);
+            color: #fff;
+            text-align: center;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        h1 {
+            margin-top: 1rem;
+            font-size: 2rem;
+            color: #64ffda;
+            text-shadow: 0 0 10px #64ffda;
+        }
+
+        .clock-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            width: 90%;
+            max-width: 1000px;
+        }
+
+        .clock-card {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s ease;
+            position: relative;
+        }
+
+        .iftar-card {
+            background: rgba(255, 165, 0, 0.1);
+            border: 1px solid rgba(255, 165, 0, 0.3);
+        }
+
+        .iftar-card .prayer-name {
+            color: #ffb347;
+        }
+
+        .clock-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .prayer-name {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #64ffda;
+        }
+
+        .digital-clock {
+            font-size: 2rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 10px #64ffda;
+        }
+
+        button {
+            background-color: transparent;
+            border: none;
+            color: #0a192f;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s ease;
+        }
+
+        .clock-card:hover>button {
+            background-color: #64ffda;
+        }
+
+        button:hover {
+            background-color: #52e0c4;
+            transform: scale(1.05);
+        }
+
+        .time-dropdowns {
+            display: none;
+            margin-top: 0.8rem;
+            gap: 0.4rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        select {
+            background-color: #0a192f;
+            color: #64ffda;
+            border: 1px solid #64ffda;
+            border-radius: 8px;
+            padding: 0.4rem;
+            font-size: 1rem;
+            max-height: 200px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #64ffda transparent;
+            width: auto;
+            min-width: 60px;
+        }
+
+        select::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        select::-webkit-scrollbar-thumb {
+            background-color: #64ffda;
+            border-radius: 10px;
+        }
+
+        select option {
+            background-color: #0a192f;
+            color: #64ffda;
+            padding: 0.3rem;
+        }
+
+        .save-btn {
+            background-color: #64ffda;
+            border: none;
+            color: #0a192f;
+            padding: 0.4rem 0.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+
+        .save-btn:hover {
+            background-color: #52e0c4;
+        }
+
+        footer {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 500px) {
+            .digital-clock {
+                font-size: 1.6rem;
+            }
+
+            select {
+                font-size: 0.9rem;
+                padding: 0.3rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Vivasoft Prayer Time</h1>
+
+    <div class="clock-container">
+        <div class="clock-card" id="fajr">
+            <div class="prayer-name">Fajr</div>
+            <div class="digital-clock" id="fajr-time">05:00 AM</div>
+            <button id="btn-fajr" onclick="toggleDropdown('fajr')">Edit</button>
+            <div class="time-dropdowns" id="fajr-dropdown"></div>
+        </div>
+
+        <div class="clock-card" id="dhuhr">
+            <div class="prayer-name">Dhuhr</div>
+            <div class="digital-clock" id="dhuhr-time">12:30 PM</div>
+            <button id="btn-dhuhr" onclick="toggleDropdown('dhuhr')">Edit</button>
+            <div class="time-dropdowns" id="dhuhr-dropdown"></div>
+        </div>
+
+        <div class="clock-card" id="asr">
+            <div class="prayer-name">Asr</div>
+            <div class="digital-clock" id="asr-time">04:15 PM</div>
+            <button id="btn-asr" onclick="toggleDropdown('asr')">Edit</button>
+            <div class="time-dropdowns" id="asr-dropdown"></div>
+        </div>
+
+        <div class="clock-card" id="maghrib">
+            <div class="prayer-name">Maghrib</div>
+            <div class="digital-clock" id="maghrib-time">06:20 PM</div>
+            <button id="btn-maghrib" onclick="toggleDropdown('maghrib')">Edit</button>
+            <div class="time-dropdowns" id="maghrib-dropdown"></div>
+        </div>
+
+        <div class="clock-card" id="isha">
+            <div class="prayer-name">Isha</div>
+            <div class="digital-clock" id="isha-time">07:45 PM</div>
+            <button id="btn-isha" onclick="toggleDropdown('isha')">Edit</button>
+            <div class="time-dropdowns" id="isha-dropdown"></div>
+        </div>
+
+        <div class="clock-card iftar-card" id="iftar">
+            <div class="prayer-name">Iftar</div>
+            <div class="digital-clock" id="iftar-time">07:45 PM</div>
+            <button id="btn-iftar" onclick="toggleDropdown('iftar')">Edit</button>
+            <div class="time-dropdowns" id="iftar-dropdown"></div>
+        </div>
+    </div>
+
+    <footer>Made with ❤️ for daily prayers</footer>
+
+    <script type="text/javascript">
+        const selectBuilder = (options) => {
+            const select = document.createElement("select");
+            options.forEach(option => {
+                const opt = document.createElement("option");
+                opt.value = option.value;
+                opt.textContent = option.text;
+                select.appendChild(opt);
+            });
+            return select;
+        };
+
+        const toggleDropdown = (prayer) => {
+            const dropdown = document.getElementById(`${prayer}-dropdown`);
+            dropdown.style.display = dropdown.style.display === "flex" ? "none" : "flex";
+
+            const editBtn = document.getElementById(`btn-${prayer}`);
+            editBtn.textContent = dropdown.style.display === "flex" ? "Cancel" : "Edit";
+        }
+
+        const saveDropdownTime = (prayer, hourSel, minSel, ampmSel) => {
+            const time = `${hourSel.value.toString().padStart(2, "0")}:${minSel.value
+                .toString()
+                .padStart(2, "0")} ${ampmSel.value}`;
+            document.getElementById(`${prayer}-time`).textContent = time;
+            localStorage.setItem(`${prayer}-time`, time);
+            document.getElementById(`${prayer}-dropdown`).style.display = "none";
+        }
+
+        const createPaddedNumberRange = (start, end, step = 1) => {
+            const options = [];
+            for (let i = start; i <= end; i += step) {
+                options.push({
+                    value: i,
+                    text: i.toString().padStart(2, "0")
+                });
+            }
+            return options;
+        };
+
+        const createDropdowns = (prayer) => {
+            const container = document.getElementById(`${prayer}-dropdown`);
+
+            const hourOptions = createPaddedNumberRange(1, 12, 1);
+            const minuteOptions = createPaddedNumberRange(0, 55, 5);
+            const ampmOptions = [
+                { value: "AM", text: "AM" },
+                { value: "PM", text: "PM" }
+            ];
+
+            const hourSelect = selectBuilder(hourOptions);
+            const minuteSelect = selectBuilder(minuteOptions);
+            const ampmSelect = selectBuilder(ampmOptions);
+
+            const saveBtn = document.createElement("button");
+            saveBtn.textContent = "Save";
+            saveBtn.classList.add("save-btn");
+            saveBtn.onclick = () => saveDropdownTime(prayer, hourSelect, minuteSelect, ampmSelect);
+
+            container.append(hourSelect, minuteSelect, ampmSelect, saveBtn);
+        }
+
+        const prayers = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha', 'iftar'];
+
+        window.onload = () => {
+            prayers.forEach(prayer => {
+                createDropdowns(prayer);
+                const saved = localStorage.getItem(`${prayer}-time`);
+                if (saved) {
+                    document.getElementById(`${prayer}-time`).textContent = saved;
+                }
+            });
+        };
+    </script>
+
+</body>
+
+</html>
