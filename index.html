@@ -88,7 +88,7 @@
             pointer-events: none;
         }
 
-        .clock-card:hover > button {
+        .clock-card:hover>button {
             background-color: #64ffda;
             opacity: 1;
             pointer-events: auto;
@@ -179,123 +179,168 @@
         <div class="clock-card" id="fajr">
             <div class="prayer-name">Fajr</div>
             <div class="digital-clock" id="fajr-time">05:00 AM</div>
-            <button class="edit-btn" id="btn-fajr" onclick="toggleDropdown('fajr')">Edit</button>
+            <button class="edit-btn" id="btn-fajr">Edit</button>
             <div class="time-dropdowns" id="fajr-dropdown"></div>
         </div>
 
         <div class="clock-card" id="dhuhr">
             <div class="prayer-name">Dhuhr</div>
             <div class="digital-clock" id="dhuhr-time">12:30 PM</div>
-            <button class="edit-btn" id="btn-dhuhr" onclick="toggleDropdown('dhuhr')">Edit</button>
+            <button class="edit-btn" id="btn-dhuhr">Edit</button>
             <div class="time-dropdowns" id="dhuhr-dropdown"></div>
         </div>
 
         <div class="clock-card" id="asr">
             <div class="prayer-name">Asr</div>
             <div class="digital-clock" id="asr-time">04:15 PM</div>
-            <button class="edit-btn" id="btn-asr" onclick="toggleDropdown('asr')">Edit</button>
+            <button class="edit-btn" id="btn-asr">Edit</button>
             <div class="time-dropdowns" id="asr-dropdown"></div>
         </div>
 
         <div class="clock-card" id="maghrib">
             <div class="prayer-name">Maghrib</div>
             <div class="digital-clock" id="maghrib-time">06:20 PM</div>
-            <button class="edit-btn" id="btn-maghrib" onclick="toggleDropdown('maghrib')">Edit</button>
+            <button class="edit-btn" id="btn-maghrib">Edit</button>
             <div class="time-dropdowns" id="maghrib-dropdown"></div>
         </div>
 
         <div class="clock-card" id="isha">
             <div class="prayer-name">Isha</div>
             <div class="digital-clock" id="isha-time">07:45 PM</div>
-            <button class="edit-btn" id="btn-isha" onclick="toggleDropdown('isha')">Edit</button>
+            <button class="edit-btn" id="btn-isha">Edit</button>
             <div class="time-dropdowns" id="isha-dropdown"></div>
         </div>
 
         <div class="clock-card iftar-card" id="iftar">
             <div class="prayer-name">Iftar</div>
             <div class="digital-clock" id="iftar-time">07:45 PM</div>
-            <button class="edit-btn" id="btn-iftar" onclick="toggleDropdown('iftar')">Edit</button>
+            <button class="edit-btn" id="btn-iftar">Edit</button>
             <div class="time-dropdowns" id="iftar-dropdown"></div>
         </div>
     </div>
 
     <footer>Made with ❤️ for daily prayers</footer>
 
-    <script type="text/javascript">
-        const selectBuilder = (options) => {
-            const select = document.createElement("select");
-            options.forEach(option => {
-                const opt = document.createElement("option");
-                opt.value = option.value;
-                opt.textContent = option.text;
-                select.appendChild(opt);
-            });
-            return select;
-        };
-
-        const toggleDropdown = (prayer) => {
-            const dropdown = document.getElementById(`${prayer}-dropdown`);
-            dropdown.style.display = dropdown.style.display === "flex" ? "none" : "flex";
-
-            const editBtn = document.getElementById(`btn-${prayer}`);
-            editBtn.textContent = dropdown.style.display === "flex" ? "Cancel" : "Edit";
-        }
-
-        const saveDropdownTime = (prayer, hourSel, minSel, ampmSel) => {
-            const time = `${hourSel.value.toString().padStart(2, "0")}:${minSel.value
-                .toString()
-                .padStart(2, "0")} ${ampmSel.value}`;
-            document.getElementById(`${prayer}-time`).textContent = time;
-            localStorage.setItem(`${prayer}-time`, time);
-            document.getElementById(`${prayer}-dropdown`).style.display = "none";
-        }
-
-        const createPaddedNumberRange = (start, end, step = 1) => {
-            const options = [];
-            for (let i = start; i <= end; i += step) {
-                options.push({
-                    value: i,
-                    text: i.toString().padStart(2, "0")
-                });
-            }
-            return options;
-        };
-
-        const createDropdowns = (prayer) => {
-            const container = document.getElementById(`${prayer}-dropdown`);
-
-            const hourOptions = createPaddedNumberRange(1, 12, 1);
-            const minuteOptions = createPaddedNumberRange(0, 55, 5);
-            const ampmOptions = [
-                { value: "AM", text: "AM" },
-                { value: "PM", text: "PM" }
-            ];
-
-            const hourSelect = selectBuilder(hourOptions);
-            const minuteSelect = selectBuilder(minuteOptions);
-            const ampmSelect = selectBuilder(ampmOptions);
-
-            const saveBtn = document.createElement("button");
-            saveBtn.textContent = "Save";
-            saveBtn.classList.add("save-btn");
-            saveBtn.onclick = () => saveDropdownTime(prayer, hourSelect, minuteSelect, ampmSelect);
-
-            container.append(hourSelect, minuteSelect, ampmSelect, saveBtn);
-        }
-
-        const prayers = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha', 'iftar'];
-
-        window.onload = () => {
-            prayers.forEach(prayer => {
-                createDropdowns(prayer);
-                const saved = localStorage.getItem(`${prayer}-time`);
-                if (saved) {
-                    document.getElementById(`${prayer}-time`).textContent = saved;
-                }
-            });
-        };
-    </script>
-
 </body>
 
 </html>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+    import { getFirestore, doc, getDoc, setDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js'
+    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBnFx5yGdBukO8gLLpoLayPhaZy748g7-s",
+        authDomain: "prayer-time-23951.firebaseapp.com",
+        projectId: "prayer-time-23951",
+        storageBucket: "prayer-time-23951.firebasestorage.app",
+        messagingSenderId: "241526805211",
+        appId: "1:241526805211:web:2cb38fc435f636a45db2fe",
+        measurementId: "G-P7MK6BS2KM"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+
+    signInAnonymously(auth)
+        .then(() => console.log("Signed in anonymously"))
+        .catch((error) => console.error("Auth error:", error));
+
+    const docRef = doc(db, "prayer_times", "2Ou0gWJP4tiRXKqYqCfY");
+    const docSnap = await getDoc(docRef);
+    const savedData = docSnap.data() ?? {};
+    console.log("Loaded prayer times:", savedData);
+
+    const updatePrayerTimeInFirestore = async (prayer, time) => {
+        try {
+            await updateDoc(docRef, {
+                [prayer]: time
+            });
+        } catch (error) {
+            console.error("Error updating document: ", error);
+        }
+    };
+
+    const selectBuilder = (options) => {
+        const select = document.createElement("select");
+        options.forEach(option => {
+            const opt = document.createElement("option");
+            opt.value = option.value;
+            opt.textContent = option.text;
+            select.appendChild(opt);
+        });
+        return select;
+    };
+
+    const toggleDropdown = (prayer) => {
+        const dropdown = document.getElementById(`${prayer}-dropdown`);
+        dropdown.style.display = dropdown.style.display === "flex" ? "none" : "flex";
+
+        const editBtn = document.getElementById(`btn-${prayer}`);
+        editBtn.textContent = dropdown.style.display === "flex" ? "Cancel" : "Edit";
+    }
+
+    const saveDropdownTime = (prayer, hourSel, minSel, ampmSel) => {
+        const time = `${hourSel.value.toString().padStart(2, "0")}:${minSel.value
+            .toString()
+            .padStart(2, "0")} ${ampmSel.value}`;
+        document.getElementById(`${prayer}-time`).textContent = time;
+        document.getElementById(`${prayer}-dropdown`).style.display = "none";
+
+        updatePrayerTimeInFirestore(prayer, time);
+    }
+
+    const createPaddedNumberRange = (start, end, step = 1) => {
+        const options = [];
+        for (let i = start; i <= end; i += step) {
+            options.push({
+                value: i,
+                text: i.toString().padStart(2, "0")
+            });
+        }
+        return options;
+    };
+
+    const createDropdowns = (prayer) => {
+        const container = document.getElementById(`${prayer}-dropdown`);
+
+        const hourOptions = createPaddedNumberRange(1, 12, 1);
+        const minuteOptions = createPaddedNumberRange(0, 55, 5);
+        const ampmOptions = [
+            { value: "AM", text: "AM" },
+            { value: "PM", text: "PM" }
+        ];
+
+        const hourSelect = selectBuilder(hourOptions);
+        const minuteSelect = selectBuilder(minuteOptions);
+        const ampmSelect = selectBuilder(ampmOptions);
+
+        const saveBtn = document.createElement("button");
+        saveBtn.textContent = "Save";
+        saveBtn.classList.add("save-btn");
+        saveBtn.onclick = () => saveDropdownTime(prayer, hourSelect, minuteSelect, ampmSelect);
+
+        container.append(hourSelect, minuteSelect, ampmSelect, saveBtn);
+    }
+
+    const prayers = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha', 'iftar'];
+
+    // Add click handlers for all edit buttons
+    prayers.forEach(prayer => {
+        const editBtn = document.getElementById(`btn-${prayer}`);
+        editBtn.addEventListener('click', () => toggleDropdown(prayer));
+    });
+
+    // Initialize dropdowns and load saved times
+    prayers.forEach(prayer => {
+        createDropdowns(prayer);
+        const saved = savedData[prayer];
+        if (saved) {
+            document.getElementById(`${prayer}-time`).textContent = saved;
+        }
+    });
+    
+</script>
