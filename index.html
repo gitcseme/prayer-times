@@ -264,30 +264,11 @@
         }
     };
 
-    const selectBuilder = (options) => {
-        const select = document.createElement("select");
-        options.forEach(option => {
-            const opt = document.createElement("option");
-            opt.value = option.value;
-            opt.textContent = option.text;
-            select.appendChild(opt);
-        });
-        return select;
-    };
-
-    const toggleDropdown = (prayer) => {
-        const dropdown = document.getElementById(`${prayer}-dropdown`);
-        dropdown.style.display = dropdown.style.display === "flex" ? "none" : "flex";
-
-        const editBtn = document.getElementById(`btn-${prayer}`);
-        editBtn.textContent = dropdown.style.display === "flex" ? "Cancel" : "Edit";
-    }
-
     const saveDropdownTime = (prayer, hourSel, minSel, ampmSel) => {
         const time = `${hourSel.value.toString().padStart(2, "0")}:${minSel.value
             .toString()
             .padStart(2, "0")} ${ampmSel.value}`;
-            
+
         document.getElementById(`${prayer}-time`).textContent = time;
         document.getElementById(`${prayer}-dropdown`).style.display = "none";
 
@@ -316,32 +297,51 @@
         return { hours, minutes, period };
     };
 
+    const selectBuilder = (options) => {
+        const select = document.createElement("select");
+        options.forEach(option => {
+            const opt = document.createElement("option");
+            opt.value = option.value;
+            opt.textContent = option.text;
+            select.appendChild(opt);
+        });
+        return select;
+    };
+
     const createDropdowns = (prayer) => {
         const { hours, minutes, period } = extractTime(prayer);
-        
+
         const hourOptions = createPaddedNumberRange(1, 12, 1);
         const minuteOptions = createPaddedNumberRange(0, 55, 5);
         const ampmOptions = [
             { value: "AM", text: "AM" },
             { value: "PM", text: "PM" }
         ];
-        
+
         const hourSelect = selectBuilder(hourOptions);
         const minuteSelect = selectBuilder(minuteOptions);
         const ampmSelect = selectBuilder(ampmOptions);
-        
+
         // Set current values
         hourSelect.value = hours;
         minuteSelect.value = minutes;
         ampmSelect.value = period;
-        
+
         const saveBtn = document.createElement("button");
         saveBtn.textContent = "Save";
         saveBtn.classList.add("save-btn");
         saveBtn.onclick = () => saveDropdownTime(prayer, hourSelect, minuteSelect, ampmSelect);
-        
+
         const container = document.getElementById(`${prayer}-dropdown`);
         container.append(hourSelect, minuteSelect, ampmSelect, saveBtn);
+    }
+
+    const toggleDropdown = (prayer) => {
+        const dropdown = document.getElementById(`${prayer}-dropdown`);
+        dropdown.style.display = dropdown.style.display === "flex" ? "none" : "flex";
+
+        const editBtn = document.getElementById(`btn-${prayer}`);
+        editBtn.textContent = dropdown.style.display === "flex" ? "Cancel" : "Edit";
     }
 
     const prayers = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha', 'iftar'];
@@ -358,5 +358,5 @@
             document.getElementById(`${prayer}-time`).textContent = saved;
         }
     });
-    
+
 </script>
