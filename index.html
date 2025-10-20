@@ -225,7 +225,7 @@
 
 </html>
 
-<script type="module">
+<script type="module" defer>
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
     import { getFirestore, doc, getDoc, setDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/12.4.0/firebase-firestore.js'
     import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-auth.js";
@@ -251,8 +251,8 @@
 
     const docRef = doc(db, "prayer_times", "2Ou0gWJP4tiRXKqYqCfY");
     const docSnap = await getDoc(docRef);
-    const savedData = docSnap.data() ?? {};
-    console.log("Loaded prayer times:", savedData);
+    const savedFirestoreData = docSnap.data() ?? {};
+    console.log("Loaded prayer times:", savedFirestoreData);
 
     const updatePrayerTimeInFirestore = async (prayer, time) => {
         try {
@@ -287,8 +287,12 @@
         const time = `${hourSel.value.toString().padStart(2, "0")}:${minSel.value
             .toString()
             .padStart(2, "0")} ${ampmSel.value}`;
+            
         document.getElementById(`${prayer}-time`).textContent = time;
         document.getElementById(`${prayer}-dropdown`).style.display = "none";
+
+        const editBtn = document.getElementById(`btn-${prayer}`);
+        editBtn.textContent = "Edit";
 
         updatePrayerTimeInFirestore(prayer, time);
     }
@@ -304,40 +308,52 @@
         return options;
     };
 
-    const createDropdowns = (prayer) => {
-        const container = document.getElementById(`${prayer}-dropdown`);
+    // Parse time string (e.g., "05:30 AM") into components
+    const extractTime = (prayer) => {
+        const timeStr = savedFirestoreData[prayer] || document.getElementById(`${prayer}-time`).textContent;
+        const [time, period] = timeStr.split(' ');
+        const [hours, minutes] = time.split(':').map(num => parseInt(num, 10));
+        return { hours, minutes, period };
+    };
 
+    const createDropdowns = (prayer) => {
+        const { hours, minutes, period } = extractTime(prayer);
+        
         const hourOptions = createPaddedNumberRange(1, 12, 1);
         const minuteOptions = createPaddedNumberRange(0, 55, 5);
         const ampmOptions = [
             { value: "AM", text: "AM" },
             { value: "PM", text: "PM" }
         ];
-
+        
         const hourSelect = selectBuilder(hourOptions);
         const minuteSelect = selectBuilder(minuteOptions);
         const ampmSelect = selectBuilder(ampmOptions);
-
+        
+        // Set current values
+        hourSelect.value = hours;
+        minuteSelect.value = minutes;
+        ampmSelect.value = period;
+        
         const saveBtn = document.createElement("button");
         saveBtn.textContent = "Save";
         saveBtn.classList.add("save-btn");
         saveBtn.onclick = () => saveDropdownTime(prayer, hourSelect, minuteSelect, ampmSelect);
-
+        
+        const container = document.getElementById(`${prayer}-dropdown`);
         container.append(hourSelect, minuteSelect, ampmSelect, saveBtn);
     }
 
     const prayers = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha', 'iftar'];
 
-    // Add click handlers for all edit buttons
+    // Initialize dropdowns and load saved times
     prayers.forEach(prayer => {
         const editBtn = document.getElementById(`btn-${prayer}`);
         editBtn.addEventListener('click', () => toggleDropdown(prayer));
-    });
 
-    // Initialize dropdowns and load saved times
-    prayers.forEach(prayer => {
         createDropdowns(prayer);
-        const saved = savedData[prayer];
+
+        const saved = savedFirestoreData[prayer];
         if (saved) {
             document.getElementById(`${prayer}-time`).textContent = saved;
         }
