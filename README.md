@@ -1,2 +1,8 @@
 # Prayer Times
-A single htlm page to display prayer times. Time is editable and updated times are saved in local storage.
+A github page that displays prayer times
+
+## Feature
+- Persists data in firestore (Firebase)
+- Authentication is annonymous
+- Anyone can update time
+- Responsive grid layout
