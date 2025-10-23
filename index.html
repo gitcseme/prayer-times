@@ -79,13 +79,23 @@
             background-color: transparent;
             border: none;
             color: #0a192f;
-            padding: 0.45rem 0.9rem;
-            border-radius: 10px;
+            width: 36px;
+            height: 36px;
+            padding: 0.5rem;
+            border-radius: 50%;
             cursor: pointer;
-            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             transition: background-color 0.2s ease, transform 0.15s ease, opacity 0.15s ease;
             opacity: 0;
             pointer-events: none;
+        }
+
+        button.edit-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
         }
 
         .clock-card:hover>button {
@@ -141,16 +151,26 @@
             background-color: #64ffda;
             border: none;
             color: #0a192f;
-            padding: 0.4rem 0.8rem;
-            border-radius: 8px;
+            width: 36px;
+            height: 36px;
+            padding: 0.5rem;
+            border-radius: 50%;
             cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             transition: all 0.2s ease;
+        }
+
+        .save-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
         }
 
         .save-btn:hover {
             background-color: #52e0c4;
+            transform: scale(1.05);
         }
 
         footer {
@@ -179,42 +199,54 @@
         <div class="clock-card" id="fajr">
             <div class="prayer-name">Fajr</div>
             <div class="digital-clock" id="fajr-time">05:00 AM</div>
-            <button class="edit-btn" id="btn-fajr">Edit</button>
+            <button class="edit-btn" id="btn-fajr" title="Edit time">
+                <svg viewBox="0 0 24 24"><path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"/></svg>
+            </button>
             <div class="time-dropdowns" id="fajr-dropdown"></div>
         </div>
 
         <div class="clock-card" id="dhuhr">
             <div class="prayer-name">Dhuhr</div>
             <div class="digital-clock" id="dhuhr-time">12:30 PM</div>
-            <button class="edit-btn" id="btn-dhuhr">Edit</button>
+            <button class="edit-btn" id="btn-dhuhr" title="Edit time">
+                <svg viewBox="0 0 24 24"><path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"/></svg>
+            </button>
             <div class="time-dropdowns" id="dhuhr-dropdown"></div>
         </div>
 
         <div class="clock-card" id="asr">
             <div class="prayer-name">Asr</div>
             <div class="digital-clock" id="asr-time">04:15 PM</div>
-            <button class="edit-btn" id="btn-asr">Edit</button>
+            <button class="edit-btn" id="btn-asr" title="Edit time">
+                <svg viewBox="0 0 24 24"><path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"/></svg>
+            </button>
             <div class="time-dropdowns" id="asr-dropdown"></div>
         </div>
 
         <div class="clock-card" id="maghrib">
             <div class="prayer-name">Maghrib</div>
             <div class="digital-clock" id="maghrib-time">06:20 PM</div>
-            <button class="edit-btn" id="btn-maghrib">Edit</button>
+            <button class="edit-btn" id="btn-maghrib" title="Edit time">
+                <svg viewBox="0 0 24 24"><path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"/></svg>
+            </button>
             <div class="time-dropdowns" id="maghrib-dropdown"></div>
         </div>
 
         <div class="clock-card" id="isha">
             <div class="prayer-name">Isha</div>
             <div class="digital-clock" id="isha-time">07:45 PM</div>
-            <button class="edit-btn" id="btn-isha">Edit</button>
+            <button class="edit-btn" id="btn-isha" title="Edit time">
+                <svg viewBox="0 0 24 24"><path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"/></svg>
+            </button>
             <div class="time-dropdowns" id="isha-dropdown"></div>
         </div>
 
         <div class="clock-card iftar-card" id="iftar">
             <div class="prayer-name">Iftar</div>
             <div class="digital-clock" id="iftar-time">07:45 PM</div>
-            <button class="edit-btn" id="btn-iftar">Edit</button>
+            <button class="edit-btn" id="btn-iftar" title="Edit time">
+                <svg viewBox="0 0 24 24"><path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"/></svg>
+            </button>
             <div class="time-dropdowns" id="iftar-dropdown"></div>
         </div>
     </div>
@@ -273,7 +305,8 @@
         document.getElementById(`${prayer}-dropdown`).style.display = "none";
 
         const editBtn = document.getElementById(`btn-${prayer}`);
-        editBtn.textContent = "Edit";
+        editBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"/></svg>';
+        editBtn.title = "Edit time";
 
         updatePrayerTimeInFirestore(prayer, time);
     }
@@ -328,8 +361,9 @@
         ampmSelect.value = period;
 
         const saveBtn = document.createElement("button");
-        saveBtn.textContent = "Save";
+        saveBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M9,16.2L4.8,12l-1.4,1.4L9,19 21,7l-1.4-1.4L9,16.2z"/></svg>';
         saveBtn.classList.add("save-btn");
+        saveBtn.title = "Save changes";
         saveBtn.onclick = () => saveDropdownTime(prayer, hourSelect, minuteSelect, ampmSelect);
 
         const container = document.getElementById(`${prayer}-dropdown`);
@@ -338,10 +372,19 @@
 
     const toggleDropdown = (prayer) => {
         const dropdown = document.getElementById(`${prayer}-dropdown`);
-        dropdown.style.display = dropdown.style.display === "flex" ? "none" : "flex";
+        const isOpen = dropdown.style.display === "flex";
+        dropdown.style.display = isOpen ? "none" : "flex";
 
         const editBtn = document.getElementById(`btn-${prayer}`);
-        editBtn.textContent = dropdown.style.display === "flex" ? "Cancel" : "Edit";
+        if (isOpen) {
+            // Return to edit icon
+            editBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z"/></svg>';
+            editBtn.title = "Edit time";
+        } else {
+            // Show close icon
+            editBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"/></svg>';
+            editBtn.title = "Cancel edit";
+        }
     }
 
     const prayers = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha', 'iftar'];
